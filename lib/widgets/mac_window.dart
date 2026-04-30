@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:so_portfolio/theme/theme_getter.dart';
 
 class DraggableMacWindow extends StatefulWidget {
   final String title;
   final double width;
   final double height;
-  final Offset initialPosition;
-  final ValueChanged<String>? onClose;
+  final Offset? initialPosition;
+  final VoidCallback? onClose, onTap;
   final String tag;
   final Function(Size) builder;
 
@@ -13,11 +14,12 @@ class DraggableMacWindow extends StatefulWidget {
     super.key,
     required this.tag,
     required this.title,
-    this.width = 400,
-    this.height = 300,
-    this.initialPosition = const Offset(100, 100),
-    this.onClose,
     required this.builder,
+    this.width = 600,
+    this.height = 400,
+    this.initialPosition,
+    this.onClose,
+    this.onTap,
   });
 
   @override
@@ -26,7 +28,7 @@ class DraggableMacWindow extends StatefulWidget {
 
 class _DraggableMacWindowState extends State<DraggableMacWindow>
     with SingleTickerProviderStateMixin {
-  late Offset _position;
+  Offset? _position;
   bool _isMaximized = false;
   bool _isDragging = false;
   Offset? _savedPosition;
@@ -36,7 +38,6 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
   @override
   void initState() {
     super.initState();
-    _position = widget.initialPosition;
     _openController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -56,34 +57,28 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
 
   void _close() {
     _openController.reverse().then((_) {
-      widget.onClose?.call(widget.tag);
+      widget.onClose?.call();
     });
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
     if (_isMaximized) return;
-
-    setState(() {
-      _position = _position + details.delta;
-    });
+    widget.onTap?.call();
+    setState(() => _position = (_position ?? Offset.zero) + details.delta);
   }
 
-  void _onHeaderDoubleTap() {
-    if (_isMaximized) {
-      _minimize();
-    } else {
-      _maximize();
-    }
-  }
+  void _onHeaderDoubleTap() => _isMaximized ? _minimize() : _maximize();
 
   void _minimize() {
+    widget.onTap?.call();
     setState(() {
       _isMaximized = false;
-      _position = _savedPosition ?? widget.initialPosition;
+      _position = _savedPosition ?? _position;
     });
   }
 
   void _maximize() {
+    widget.onTap?.call();
     setState(() {
       _isMaximized = true;
       _savedPosition = _position;
@@ -94,101 +89,109 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final windowWidth = (_isMaximized ? screenSize.width : widget.width) - 10;
-    final windowHeight =
-        (_isMaximized ? screenSize.height : widget.height) - 10;
+    final windowWidth = _isMaximized ? screenSize.width - 10 : widget.width;
+    final windowHeight = _isMaximized ? screenSize.height - 10 : widget.height;
+
+    _position ??=
+        widget.initialPosition ??
+        Offset(
+          (screenSize.width - widget.width) / 2,
+          (screenSize.height - widget.height) / 2,
+        );
 
     return AnimatedPositioned(
-      duration: _isDragging
-          ? const Duration(milliseconds: 0)
-          : const Duration(milliseconds: 250),
-      left: _position.dx,
-      top: _position.dy,
-      child: ScaleTransition(
-        scale: _openAnimation,
-        child: AnimatedContainer(
-          width: windowWidth,
-          duration: const Duration(milliseconds: 250),
-          height: windowHeight,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 20,
-                offset: Offset(0, 8),
-              ),
-            ],
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onDoubleTap: _onHeaderDoubleTap,
-                onPanUpdate: _onDragUpdate,
-                onPanEnd: (details) {
-                  setState(() {
-                    _isDragging = false;
-                  });
-                },
-                onPanStart: (details) {
-                  setState(() {
-                    _isDragging = true;
-                  });
-                },
-
-                child: Container(
-                  height: 40,
-                  color: const Color(0xFFE8E8E8),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: [
-                      _TrafficLight(
-                        color: const Color(0xFFFF5F57),
-                        onTap: _close,
+      duration: _isDragging ? Duration.zero : const Duration(milliseconds: 250),
+      left: _position!.dx,
+      top: _position!.dy,
+      child: GestureDetector(
+        onTapDown: (_) => widget.onTap?.call(),
+        child: ScaleTransition(
+          scale: _openAnimation,
+          child: AnimatedContainer(
+            width: windowWidth,
+            height: windowHeight,
+            duration: const Duration(milliseconds: 250),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: context.theme.appColors.windowBodyColor,
+              boxShadow: [
+                BoxShadow(
+                  color: context.theme.appColors.shadowColor,
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                GestureDetector(
+                  onDoubleTap: _onHeaderDoubleTap,
+                  onPanUpdate: _onDragUpdate,
+                  onPanStart: (_) => setState(() => _isDragging = true),
+                  onPanEnd: (_) => setState(() => _isDragging = false),
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: context.theme.appColors.windowHeaderColor,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: context.theme.appColors.borderColor,
+                        ),
                       ),
-                      const SizedBox(width: 8),
-                      _TrafficLight(
-                        color: const Color(0xFFFFBD2E),
-                        onTap: () {},
-                      ),
-                      const SizedBox(width: 8),
-                      _TrafficLight(
-                        color: const Color(0xFF28C840),
-                        onTap: () => _isMaximized ? _minimize() : _maximize(),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            widget.title,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF333333),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      children: [
+                        _TrafficLight(
+                          color: const Color(0xFFFF5F57),
+                          onTap: _close,
+                          icon: Icons.close,
+                        ),
+                        const SizedBox(width: 8),
+                        _TrafficLight(
+                          color: const Color(0xFFFFBD2E),
+                          icon: Icons.remove,
+                          onTap: () {},
+                        ),
+                        const SizedBox(width: 8),
+                        _TrafficLight(
+                          color: const Color(0xFF28C840),
+                          icon: _isMaximized
+                              ? Icons.fullscreen_exit_rounded
+                              : Icons.fullscreen_rounded,
+                          onTap: () => _isMaximized ? _minimize() : _maximize(),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              widget.title,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: context.theme.appColors.headerTextColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 60),
-                    ],
+                        const SizedBox(width: 60),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              // --- CONTENIDO animado ---
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SingleChildScrollView(
-                      child: widget.builder(
-                        Size(constraints.maxWidth, constraints.maxHeight),
-                      ),
-                    );
-                  },
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: widget.builder(
+                          Size(constraints.maxWidth, constraints.maxHeight),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -199,8 +202,13 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
 class _TrafficLight extends StatefulWidget {
   final Color color;
   final VoidCallback onTap;
+  final IconData icon;
 
-  const _TrafficLight({required this.color, required this.onTap});
+  const _TrafficLight({
+    required this.color,
+    required this.onTap,
+    required this.icon,
+  });
 
   @override
   State<_TrafficLight> createState() => _TrafficLightState();
@@ -221,11 +229,23 @@ class _TrafficLightState extends State<_TrafficLight> {
           width: 13,
           height: 13,
           decoration: BoxDecoration(
-            color: _hovered ? widget.color : widget.color.withOpacity(0.85),
+            color: widget.color.withValues(alpha: .7),
             shape: BoxShape.circle,
             border: Border.all(
-              color: widget.color.withOpacity(0.3),
+              color: widget.color.withValues(alpha: .3),
               width: 0.5,
+            ),
+          ),
+
+          child: AnimatedOpacity(
+            opacity: _hovered ? 1 : 0,
+            duration: const Duration(milliseconds: 150),
+            child: Icon(
+              widget.icon,
+              size: 12,
+              color: _hovered
+                  ? Colors.black.withValues(alpha: .65)
+                  : Colors.transparent,
             ),
           ),
         ),
