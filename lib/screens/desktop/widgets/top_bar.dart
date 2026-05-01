@@ -69,7 +69,7 @@ class TopBar extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.apple, color: context.theme.appColors.headerTextColor),
+              Icon(Icons.apple, color: context.theme.appColors.topBarTextColor),
               SizedBox(width: 10),
               Expanded(
                 child: Transform.translate(
@@ -80,7 +80,7 @@ class TopBar extends StatelessWidget {
                       Text(
                         state.currentTag?.name ?? "",
                         style: TextStyle(
-                          color: context.theme.appColors.headerTextColor,
+                          color: context.theme.appColors.topBarTextColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -88,7 +88,7 @@ class TopBar extends StatelessWidget {
                       Text(
                         "$dateStr  •  $timeStr",
                         style: TextStyle(
-                          color: context.theme.appColors.headerTextColor,
+                          color: context.theme.appColors.topBarTextColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

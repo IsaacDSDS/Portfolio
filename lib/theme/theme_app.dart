@@ -5,16 +5,20 @@ class ThemeColorExtension extends ThemeExtension<ThemeColorExtension> {
     required this.windowHeaderColor,
     required this.headerTextColor,
     required this.windowBodyColor,
+    required this.topBarTextColor,
     required this.borderColor,
     required this.shadowColor,
   });
 
-  // ===== Header =======
+  // ===== Window Header =======
   final Color windowHeaderColor;
   final Color headerTextColor;
 
-  // ===== Body =======
+  // ===== Window Body =======
   final Color windowBodyColor;
+
+  // ===== Desktop Top Bar =====
+  final Color topBarTextColor;
 
   // ===== Other =======
   final Color borderColor;
@@ -27,6 +31,7 @@ class ThemeColorExtension extends ThemeExtension<ThemeColorExtension> {
     Color? borderColor,
     Color? shadowColor,
     Color? headerTextColor,
+    Color? topBarTextColor,
   }) {
     return ThemeColorExtension(
       windowHeaderColor: windowHeaderColor ?? this.windowHeaderColor,
@@ -34,6 +39,7 @@ class ThemeColorExtension extends ThemeExtension<ThemeColorExtension> {
       borderColor: borderColor ?? this.borderColor,
       shadowColor: shadowColor ?? this.shadowColor,
       headerTextColor: headerTextColor ?? this.headerTextColor,
+      topBarTextColor: topBarTextColor ?? this.topBarTextColor,
     );
   }
 
@@ -54,6 +60,9 @@ class ThemeColorExtension extends ThemeExtension<ThemeColorExtension> {
       headerTextColor:
           Color.lerp(headerTextColor, other.headerTextColor, t) ??
           headerTextColor,
+      topBarTextColor:
+          Color.lerp(topBarTextColor, other.topBarTextColor, t) ??
+          topBarTextColor,
     );
   }
 }
@@ -70,6 +79,7 @@ class ThemeModeColors {
     borderColor: Color(0xffede9e5),
     shadowColor: Color(0xff3b393f).withValues(alpha: .2),
     headerTextColor: Colors.black,
+    topBarTextColor: Colors.white,
   );
 
   static final dark = ThemeData(extensions: [darkTheme], fontFamily: 'Roboto');
@@ -80,5 +90,6 @@ class ThemeModeColors {
     borderColor: Color(0xff3b393f),
     shadowColor: Color(0xff3b393f),
     headerTextColor: Colors.white,
+    topBarTextColor: Colors.white,
   );
 }
