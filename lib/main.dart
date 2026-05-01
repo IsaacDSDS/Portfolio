@@ -22,6 +22,7 @@ class SoPortfolioApp extends StatelessWidget {
             themeMode: themeState.mode,
             theme: ThemeModeColors.light,
             darkTheme: ThemeModeColors.dark,
+            debugShowCheckedModeBanner: false,
             home: const BaseScreen(),
           );
         },

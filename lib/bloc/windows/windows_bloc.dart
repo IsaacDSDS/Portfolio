@@ -4,7 +4,7 @@ part 'windows_event.dart';
 part 'windows_state.dart';
 
 class WindowsBloc extends Bloc<WindowsEvent, WindowsState> {
-  WindowsBloc() : super(const WindowsState([])) {
+  WindowsBloc() : super(const WindowsState(tags: [])) {
     on<WindowOpened>(openWindow);
     on<WindowClosed>(closeWindow);
     on<WindowFocused>(focusWindow);
@@ -15,14 +15,24 @@ class WindowsBloc extends Bloc<WindowsEvent, WindowsState> {
     Emitter<WindowsState> emit,
   ) async {
     if (state.tags.contains(event.tag)) return;
-    emit(state.copyWith([...state.tags, event.tag]));
+    emit(
+      state.copyWith(currentTag: event.tag, tags: [...state.tags, event.tag]),
+    );
   }
 
   Future<void> closeWindow(
     WindowClosed event,
     Emitter<WindowsState> emit,
   ) async {
-    emit(state.copyWith(state.tags.where((t) => t != event.tag).toList()));
+    WindowsState newState = state.copyWith(
+      tags: state.tags.where((t) => t != event.tag).toList(),
+    );
+    if (newState.tags.isEmpty) {
+      newState = newState.copyWith(currentTag: "");
+    } else {
+      newState = newState.copyWith(currentTag: newState.tags.last);
+    }
+    emit(newState);
   }
 
   Future<void> focusWindow(
@@ -34,6 +44,6 @@ class WindowsBloc extends Bloc<WindowsEvent, WindowsState> {
     final tags = [...state.tags]
       ..remove(event.tag)
       ..add(event.tag);
-    emit(state.copyWith(tags));
+    emit(state.copyWith(tags: tags, currentTag: event.tag));
   }
 }

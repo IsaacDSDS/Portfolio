@@ -59,7 +59,10 @@ class ThemeColorExtension extends ThemeExtension<ThemeColorExtension> {
 }
 
 class ThemeModeColors {
-  static final light = ThemeData(extensions: [lightTheme]);
+  static final light = ThemeData(
+    extensions: [lightTheme],
+    fontFamily: 'Roboto',
+  );
 
   static final lightTheme = ThemeColorExtension(
     windowHeaderColor: Color(0xfffffdfa),
@@ -69,7 +72,7 @@ class ThemeModeColors {
     headerTextColor: Colors.black,
   );
 
-  static final dark = ThemeData(extensions: [darkTheme]);
+  static final dark = ThemeData(extensions: [darkTheme], fontFamily: 'Roboto');
 
   static final darkTheme = ThemeColorExtension(
     windowHeaderColor: const Color(0xff25262d),

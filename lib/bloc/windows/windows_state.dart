@@ -2,6 +2,11 @@ part of 'windows_bloc.dart';
 
 class WindowsState {
   final List<String> tags;
-  const WindowsState(this.tags);
-  WindowsState copyWith(List<String> tags) => WindowsState(tags);
+  final String currentTag;
+  const WindowsState({this.currentTag = "", this.tags = const []});
+  WindowsState copyWith({String? currentTag, List<String>? tags}) =>
+      WindowsState(
+        currentTag: currentTag ?? this.currentTag,
+        tags: tags ?? this.tags,
+      );
 }

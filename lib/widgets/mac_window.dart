@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/theme/theme_getter.dart';
 
 const double _kMinWidth = 300;
@@ -72,7 +73,7 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
     _height = widget.height;
     _openController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 250),
     );
     _openAnimation = CurvedAnimation(
       parent: _openController,
@@ -129,7 +130,7 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
       _savedPosition = _position;
       _savedSize = Size(_width, _height);
       _width = screen.width - 10;
-      _height = screen.height - 10;
+      _height = screen.height - 10 - topBarHeight;
       _position = const Offset(5, 5);
     });
   }
@@ -153,31 +154,52 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
           _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
         case _ResizeEdge.left:
           final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
-          _position = Offset((pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth), pos.dy);
+          _position = Offset(
+            (pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth),
+            pos.dy,
+          );
           _width = newWidth;
         case _ResizeEdge.top:
           final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
-          _position = Offset(pos.dx, (pos.dy + (_height - newHeight)).clamp(0, screen.height - _kMinHeight));
+          _position = Offset(
+            pos.dx,
+            (pos.dy + (_height - newHeight)).clamp(
+              0,
+              screen.height - _kMinHeight,
+            ),
+          );
           _height = newHeight;
         case _ResizeEdge.bottomRight:
           _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
           _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
         case _ResizeEdge.bottomLeft:
           final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
-          _position = Offset((pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth), pos.dy);
+          _position = Offset(
+            (pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth),
+            pos.dy,
+          );
           _width = newWidth;
           _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
         case _ResizeEdge.topRight:
           _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
           final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
-          _position = Offset(pos.dx, (pos.dy + (_height - newHeight)).clamp(0, screen.height - _kMinHeight));
+          _position = Offset(
+            pos.dx,
+            (pos.dy + (_height - newHeight)).clamp(
+              0,
+              screen.height - _kMinHeight,
+            ),
+          );
           _height = newHeight;
         case _ResizeEdge.topLeft:
           final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
           final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
           _position = Offset(
             (pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth),
-            (pos.dy + (_height - newHeight)).clamp(0, screen.height - _kMinHeight),
+            (pos.dy + (_height - newHeight)).clamp(
+              0,
+              screen.height - _kMinHeight,
+            ),
           );
           _width = newWidth;
           _height = newHeight;
