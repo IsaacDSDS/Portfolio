@@ -5,12 +5,12 @@ part 'windows_state.dart';
 
 class WindowsBloc extends Bloc<WindowsEvent, WindowsState> {
   WindowsBloc() : super(const WindowsState([])) {
-    on<WindowOpened>(openProfileWindow);
+    on<WindowOpened>(openWindow);
     on<WindowClosed>(closeWindow);
     on<WindowFocused>(focusWindow);
   }
 
-  Future<void> openProfileWindow(
+  Future<void> openWindow(
     WindowOpened event,
     Emitter<WindowsState> emit,
   ) async {
