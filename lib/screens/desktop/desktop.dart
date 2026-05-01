@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/theme/theme_bloc.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
+import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
+import 'package:so_portfolio/screens/desktop/widgets/app.dart';
+import 'package:so_portfolio/screens/desktop/windows/window_base.dart';
+import 'package:so_portfolio/screens/desktop/widgets/dock.dart';
 import 'package:so_portfolio/screens/desktop/widgets/top_bar.dart';
-import 'package:so_portfolio/widgets/mac_window.dart';
 
 class DesktopScreen extends StatelessWidget {
   const DesktopScreen({super.key});
@@ -40,7 +43,14 @@ class DesktopScreen extends StatelessWidget {
                 ),
               ),
               Positioned.fill(
-                child: Column(children: [TopBar(), DesktopBody()]),
+                child: Column(
+                  children: [
+                    TopBar(),
+                    DesktopBody(),
+                    Dock(),
+                    SizedBox(height: 10),
+                  ],
+                ),
               ),
             ],
           );
@@ -61,6 +71,16 @@ class DesktopScreen extends StatelessWidget {
 class DesktopBody extends StatelessWidget {
   const DesktopBody({super.key});
 
+  void openWindow({
+    required BuildContext context,
+    required String identifier,
+    required String title,
+  }) {
+    context.read<WindowsBloc>().add(
+      WindowOpened(Tag(identifier: identifier, name: title)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final WindowsBloc windowsBloc = context.watch<WindowsBloc>();
@@ -75,27 +95,80 @@ class DesktopBody extends StatelessWidget {
               SizedBox(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () => windowsBloc.add(
-                      WindowOpened(
-                        Tag(
-                          name:
-                              'prueba_${DateTime.now().millisecondsSinceEpoch}',
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 30),
+                  child: Wrap(
+                    direction: Axis.vertical,
+                    alignment: WrapAlignment.start,
+                    verticalDirection: VerticalDirection.down,
+                    textDirection: TextDirection.rtl,
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      DesktopApp(
+                        icon: 'assets/icons/about_me.png',
+                        name: 'About Me',
+                        onTap: () => openWindow(
+                          context: context,
+                          identifier: WindowsTagsIdentifiers.aboutMe,
+                          title: 'About Me',
                         ),
                       ),
-                    ),
-                    child: const Text('Open Prueba'),
+                      DesktopApp(
+                        icon: 'assets/icons/skills.png',
+                        name: 'Skills',
+                        onTap: () => openWindow(
+                          context: context,
+                          identifier: WindowsTagsIdentifiers.skills,
+                          title: 'Skills',
+                        ),
+                      ),
+
+                      DesktopApp(
+                        icon: 'assets/icons/projects.png',
+                        name: 'Projects',
+                        onTap: () => openWindow(
+                          context: context,
+                          identifier: WindowsTagsIdentifiers.projects,
+                          title: 'Projects',
+                        ),
+                      ),
+                      DesktopApp(
+                        icon: 'assets/icons/cv.png',
+                        name: 'Curriculum Vitae',
+                        onTap: () => openWindow(
+                          context: context,
+                          identifier: WindowsTagsIdentifiers.cv,
+                          title: 'Curriculum Vitae',
+                        ),
+                      ),
+
+                      DesktopApp(
+                        icon: 'assets/icons/contact.png',
+                        name: 'Contact Me',
+                        onTap: () => openWindow(
+                          context: context,
+                          identifier: WindowsTagsIdentifiers.contact,
+                          title: 'Contact Me',
+                        ),
+                      ),
+                      DesktopApp(
+                        icon: 'assets/icons/github.png',
+                        name: 'Github',
+                        onTap: () => openWindow(
+                          context: context,
+                          identifier: WindowsTagsIdentifiers.github,
+                          title: 'Github',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               for (final tag in state.tags)
-                DraggableMacWindow(
-                  key: ValueKey(tag.name),
+                WindowBase(
+                  key: ValueKey(tag.identifier),
                   tag: tag,
-                  title: tag.name,
-                  builder: (size) =>
-                      Text('hola ${tag.name} ${size.width} x ${size.height}'),
                   onClose: () => windowsBloc.add(WindowClosed(tag)),
                   onTap: () => windowsBloc.add(WindowFocused(tag)),
                 ),

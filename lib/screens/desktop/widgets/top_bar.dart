@@ -1,54 +1,42 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
+import 'package:so_portfolio/core/date_utils.dart';
 import 'package:so_portfolio/theme/theme_getter.dart';
 
-class TopBar extends StatelessWidget {
+class TopBar extends StatefulWidget {
   const TopBar({super.key});
 
   @override
+  State<TopBar> createState() => _TopBarState();
+}
+
+class _TopBarState extends State<TopBar> {
+  late DateTime _now;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _now = DateTime.now();
+    _timer = Timer.periodic(const Duration(seconds: 30), (_) {
+      setState(() => _now = DateTime.now());
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final hour24 = now.hour;
-    final minute = now.minute;
-    final hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
-    final period = hour24 < 12 ? 'AM' : 'PM';
-    final hourStr = hour12 < 10 ? '0$hour12' : hour12.toString();
-    final minuteStr = minute < 10 ? '0$minute' : minute.toString();
-
-    final timeStr = '$hourStr:$minuteStr $period';
-    final day = now.day;
-    final month = now.month;
-    final year = now.year;
-    final months = [
-      "",
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    final days = [
-      "",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
-
-    String dateStr =
-        "${days[now.weekday].substring(0, 3)} $day ${months[month].substring(0, 3)} $year";
+    final timeStr = AppDateUtils.formatTime(_now);
+    final dateStr = AppDateUtils.formatDate(_now);
 
     final size = MediaQuery.sizeOf(context);
     return BlocBuilder<WindowsBloc, WindowsState>(
@@ -78,7 +66,7 @@ class TopBar extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        state.currentTag?.name ?? "",
+                        state.currentTag?.name ?? "Finder",
                         style: TextStyle(
                           color: context.theme.appColors.topBarTextColor,
                           fontWeight: FontWeight.w600,

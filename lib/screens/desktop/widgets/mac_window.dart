@@ -99,12 +99,13 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
     if (_isMaximized) return;
     widget.onTap?.call();
     final screen = MediaQuery.of(context).size;
+    final maxY = screen.height - bottomBarHeight - 30 - _height;
     final current = _position ?? Offset.zero;
     final next = current + details.delta;
     setState(() {
       _position = Offset(
         next.dx.clamp(0, screen.width - _width),
-        next.dy.clamp(0, screen.height - _height),
+        next.dy.clamp(topBarHeight, maxY),
       );
     });
   }
@@ -131,7 +132,7 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
       _savedPosition = _position;
       _savedSize = Size(_width, _height);
       _width = screen.width - 10;
-      _height = screen.height - 10 - topBarHeight;
+      _height = screen.height - 20 - topBarHeight - bottomBarHeight;
       _position = const Offset(5, 5);
     });
   }
@@ -148,11 +149,13 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
     final pos = _position ?? Offset.zero;
 
     setState(() {
+      final maxHeight = screen.height - bottomBarHeight - 10 - pos.dy;
+      final maxTop = screen.height - bottomBarHeight - 10 - _kMinHeight;
       switch (edge) {
         case _ResizeEdge.right:
           _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
         case _ResizeEdge.bottom:
-          _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
+          _height = (_height + dy).clamp(_kMinHeight, maxHeight);
         case _ResizeEdge.left:
           final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
           _position = Offset(
@@ -164,15 +167,12 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
           final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
           _position = Offset(
             pos.dx,
-            (pos.dy + (_height - newHeight)).clamp(
-              0,
-              screen.height - _kMinHeight,
-            ),
+            (pos.dy + (_height - newHeight)).clamp(topBarHeight, maxTop),
           );
           _height = newHeight;
         case _ResizeEdge.bottomRight:
           _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
-          _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
+          _height = (_height + dy).clamp(_kMinHeight, maxHeight);
         case _ResizeEdge.bottomLeft:
           final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
           _position = Offset(
@@ -180,16 +180,13 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
             pos.dy,
           );
           _width = newWidth;
-          _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
+          _height = (_height + dy).clamp(_kMinHeight, maxHeight);
         case _ResizeEdge.topRight:
           _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
           final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
           _position = Offset(
             pos.dx,
-            (pos.dy + (_height - newHeight)).clamp(
-              0,
-              screen.height - _kMinHeight,
-            ),
+            (pos.dy + (_height - newHeight)).clamp(topBarHeight, maxTop),
           );
           _height = newHeight;
         case _ResizeEdge.topLeft:
@@ -197,10 +194,7 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
           final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
           _position = Offset(
             (pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth),
-            (pos.dy + (_height - newHeight)).clamp(
-              0,
-              screen.height - _kMinHeight,
-            ),
+            (pos.dy + (_height - newHeight)).clamp(topBarHeight, maxTop),
           );
           _width = newWidth;
           _height = newHeight;
