@@ -96,7 +96,15 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
   void _onDragUpdate(DragUpdateDetails details) {
     if (_isMaximized) return;
     widget.onTap?.call();
-    setState(() => _position = (_position ?? Offset.zero) + details.delta);
+    final screen = MediaQuery.of(context).size;
+    final current = _position ?? Offset.zero;
+    final next = current + details.delta;
+    setState(() {
+      _position = Offset(
+        next.dx.clamp(0, screen.width - _width),
+        next.dy.clamp(0, screen.height - _height),
+      );
+    });
   }
 
   void _onHeaderDoubleTap() => _isMaximized ? _minimize() : _maximize();
@@ -132,6 +140,7 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
   void _onResize(_ResizeEdge edge, DragUpdateDetails details) {
     if (_isMaximized) return;
     widget.onTap?.call();
+    final screen = MediaQuery.of(context).size;
     final dx = details.delta.dx;
     final dy = details.delta.dy;
     final pos = _position ?? Offset.zero;
@@ -139,36 +148,36 @@ class _DraggableMacWindowState extends State<DraggableMacWindow>
     setState(() {
       switch (edge) {
         case _ResizeEdge.right:
-          _width = (_width + dx).clamp(_kMinWidth, double.infinity);
+          _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
         case _ResizeEdge.bottom:
-          _height = (_height + dy).clamp(_kMinHeight, double.infinity);
+          _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
         case _ResizeEdge.left:
-          final newWidth = (_width - dx).clamp(_kMinWidth, double.infinity);
-          _position = Offset(pos.dx + (_width - newWidth), pos.dy);
+          final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
+          _position = Offset((pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth), pos.dy);
           _width = newWidth;
         case _ResizeEdge.top:
-          final newHeight = (_height - dy).clamp(_kMinHeight, double.infinity);
-          _position = Offset(pos.dx, pos.dy + (_height - newHeight));
+          final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
+          _position = Offset(pos.dx, (pos.dy + (_height - newHeight)).clamp(0, screen.height - _kMinHeight));
           _height = newHeight;
         case _ResizeEdge.bottomRight:
-          _width = (_width + dx).clamp(_kMinWidth, double.infinity);
-          _height = (_height + dy).clamp(_kMinHeight, double.infinity);
+          _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
+          _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
         case _ResizeEdge.bottomLeft:
-          final newWidth = (_width - dx).clamp(_kMinWidth, double.infinity);
-          _position = Offset(pos.dx + (_width - newWidth), pos.dy);
+          final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
+          _position = Offset((pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth), pos.dy);
           _width = newWidth;
-          _height = (_height + dy).clamp(_kMinHeight, double.infinity);
+          _height = (_height + dy).clamp(_kMinHeight, screen.height - pos.dy);
         case _ResizeEdge.topRight:
-          _width = (_width + dx).clamp(_kMinWidth, double.infinity);
-          final newHeight = (_height - dy).clamp(_kMinHeight, double.infinity);
-          _position = Offset(pos.dx, pos.dy + (_height - newHeight));
+          _width = (_width + dx).clamp(_kMinWidth, screen.width - pos.dx);
+          final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
+          _position = Offset(pos.dx, (pos.dy + (_height - newHeight)).clamp(0, screen.height - _kMinHeight));
           _height = newHeight;
         case _ResizeEdge.topLeft:
-          final newWidth = (_width - dx).clamp(_kMinWidth, double.infinity);
-          final newHeight = (_height - dy).clamp(_kMinHeight, double.infinity);
+          final newWidth = (_width - dx).clamp(_kMinWidth, pos.dx + _width);
+          final newHeight = (_height - dy).clamp(_kMinHeight, pos.dy + _height);
           _position = Offset(
-            pos.dx + (_width - newWidth),
-            pos.dy + (_height - newHeight),
+            (pos.dx + (_width - newWidth)).clamp(0, screen.width - _kMinWidth),
+            (pos.dy + (_height - newHeight)).clamp(0, screen.height - _kMinHeight),
           );
           _width = newWidth;
           _height = newHeight;
