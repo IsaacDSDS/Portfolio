@@ -12,7 +12,7 @@ class SeparatedRow extends StatelessWidget {
   final IndexedWidgetBuilder separatorBuilder;
 
   const SeparatedRow({
-    Key? key,
+    super.key,
     this.textBaseline,
     this.textDirection,
     this.children = const <Widget>[],
@@ -22,7 +22,7 @@ class SeparatedRow extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     required this.separatorBuilder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

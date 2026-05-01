@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
+import 'package:so_portfolio/widgets/separated_row.dart';
 
 const double _kBaseSize = bottomBarHeight - 25;
 const double _kMaxSize = 70;
@@ -64,17 +65,16 @@ class _DockState extends State<Dock> {
               Center(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      for (int i = 0; i < items.length; i++) ...[
-                        if (i > 0) const SizedBox(width: 5),
-                        AnimatedDockItem(
-                          size: sizeForIndex(i, items.length),
-                          child: items[i],
-                          isOpen: items[i].isOpen,
-                        ),
-                      ],
-                    ],
+                  child: SeparatedRow(
+                    separatorBuilder: (context, index) => SizedBox(width: 5),
+                    children: List.generate(items.length, (i) {
+                      final item = items[i];
+                      return AnimatedDockItem(
+                        size: sizeForIndex(i, items.length),
+                        data: item,
+                        isOpen: item.isOpen,
+                      );
+                    }),
                   ),
                 ),
               ),
@@ -191,20 +191,20 @@ class DockItemData {
 
 class AnimatedDockItem extends StatelessWidget {
   final double size;
-  final DockItemData child;
+  final DockItemData data;
   final bool isOpen;
 
   const AnimatedDockItem({
     super.key,
     required this.size,
-    required this.child,
+    required this.data,
     required this.isOpen,
   });
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: child.name,
+      message: data.name,
       preferBelow: false,
       verticalOffset: 50,
       decoration: BoxDecoration(
@@ -213,7 +213,7 @@ class AnimatedDockItem extends StatelessWidget {
       ),
       textStyle: const TextStyle(color: Colors.white, fontSize: 12),
       child: GestureDetector(
-        onTap: child.onTap,
+        onTap: data.onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -225,11 +225,11 @@ class AnimatedDockItem extends StatelessWidget {
               height: size,
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: child.color,
+                color: data.color,
                 borderRadius: BorderRadius.circular(size * 0.25),
               ),
               clipBehavior: Clip.antiAlias,
-              child: Image.asset(child.icon),
+              child: Image.asset(data.icon),
             ),
             SizedBox(height: 3),
             Container(
