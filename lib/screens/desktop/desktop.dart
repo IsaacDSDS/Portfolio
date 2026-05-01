@@ -77,7 +77,7 @@ class DesktopBody extends StatelessWidget {
     required String title,
   }) {
     context.read<WindowsBloc>().add(
-      WindowOpened(Tag(identifier: identifier, name: title)),
+      WindowOpened(Tag(identifier: identifier, title: title)),
     );
   }
 

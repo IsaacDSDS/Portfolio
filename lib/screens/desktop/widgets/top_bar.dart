@@ -66,7 +66,10 @@ class _TopBarState extends State<TopBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        state.currentTag?.name ?? "Finder",
+                        state.currentTag?.title != null &&
+                                state.currentTag!.title.isNotEmpty
+                            ? state.currentTag!.title
+                            : "Finder",
                         style: TextStyle(
                           color: context.theme.appColors.topBarTextColor,
                           fontWeight: FontWeight.w600,

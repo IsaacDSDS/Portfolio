@@ -1,7 +1,7 @@
 class Tag {
   final String identifier;
-  final String name;
-  const Tag({required this.identifier, this.name = ''});
+  final String title;
+  const Tag({required this.identifier, this.title = ''});
 
   @override
   bool operator ==(Object other) =>

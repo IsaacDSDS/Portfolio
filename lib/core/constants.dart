@@ -1,5 +1,5 @@
 const double topBarHeight = 20;
-const double bottomBarHeight = 50;
+const double bottomBarHeight = 80;
 
 class WindowsTagsIdentifiers {
   static const String aboutMe = "about_me";

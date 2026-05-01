@@ -20,26 +20,11 @@ class WindowBase extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableMacWindow(
       tag: tag,
-      title: title,
+      title: tag.title,
       builder: _buildContent,
       onClose: onClose,
       onTap: onTap,
     );
-  }
-
-  String get title {
-    switch (tag.identifier) {
-      case WindowsTagsIdentifiers.aboutMe:
-        return "About Me";
-      case WindowsTagsIdentifiers.skills:
-        return "Skills";
-      case WindowsTagsIdentifiers.projects:
-        return "Projects";
-      case WindowsTagsIdentifiers.contact:
-        return "Contact";
-      default:
-        return "Window";
-    }
   }
 
   Widget _buildContent(Size size) {
