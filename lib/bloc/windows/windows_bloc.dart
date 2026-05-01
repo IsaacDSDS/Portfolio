@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:so_portfolio/models/ui/tag.dart';
 
 part 'windows_event.dart';
 part 'windows_state.dart';
@@ -24,15 +25,9 @@ class WindowsBloc extends Bloc<WindowsEvent, WindowsState> {
     WindowClosed event,
     Emitter<WindowsState> emit,
   ) async {
-    WindowsState newState = state.copyWith(
-      tags: state.tags.where((t) => t != event.tag).toList(),
-    );
-    if (newState.tags.isEmpty) {
-      newState = newState.copyWith(currentTag: "");
-    } else {
-      newState = newState.copyWith(currentTag: newState.tags.last);
-    }
-    emit(newState);
+    final tags = state.tags.where((t) => t != event.tag).toList();
+    final currentTag = tags.isEmpty ? Tag.finder : tags.last;
+    emit(state.copyWith(tags: tags, currentTag: currentTag));
   }
 
   Future<void> focusWindow(

@@ -9,9 +9,6 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WindowsBloc windowsBloc = context.watch<WindowsBloc>();
-    final state = windowsBloc.state;
-
     final now = DateTime.now();
     final hour24 = now.hour;
     final minute = now.minute;
@@ -54,48 +51,55 @@ class TopBar extends StatelessWidget {
         "${days[now.weekday].substring(0, 3)} $day ${months[month].substring(0, 3)} $year";
 
     final size = MediaQuery.sizeOf(context);
-    return Container(
-      width: size.width,
-      height: topBarHeight,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 70),
-        ],
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(Icons.apple, color: context.theme.appColors.headerTextColor),
-          SizedBox(width: 10),
-          Expanded(
-            child: Transform.translate(
-              offset: Offset(0, 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    state.currentTag.isEmpty ? "Finder" : state.currentTag,
-                    style: TextStyle(
-                      color: context.theme.appColors.headerTextColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    "$dateStr  •  $timeStr",
-                    style: TextStyle(
-                      color: context.theme.appColors.headerTextColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+    return BlocBuilder<WindowsBloc, WindowsState>(
+      builder: (context, state) {
+        return Container(
+          width: size.width,
+          height: topBarHeight,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.5),
+                blurRadius: 70,
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.apple, color: context.theme.appColors.headerTextColor),
+              SizedBox(width: 10),
+              Expanded(
+                child: Transform.translate(
+                  offset: Offset(0, 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        state.currentTag?.name ?? "",
+                        style: TextStyle(
+                          color: context.theme.appColors.headerTextColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        "$dateStr  •  $timeStr",
+                        style: TextStyle(
+                          color: context.theme.appColors.headerTextColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

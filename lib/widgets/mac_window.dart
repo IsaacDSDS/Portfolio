@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:so_portfolio/core/constants.dart';
+import 'package:so_portfolio/models/ui/tag.dart';
 import 'package:so_portfolio/theme/theme_getter.dart';
 
 const double _kMinWidth = 300;
@@ -34,7 +35,7 @@ class DraggableMacWindow extends StatefulWidget {
   final double height;
   final Offset? initialPosition;
   final VoidCallback? onClose, onTap;
-  final String tag;
+  final Tag tag;
   final Function(Size) builder;
 
   const DraggableMacWindow({
