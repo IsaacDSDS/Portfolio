@@ -2,11 +2,9 @@
 
 > A macOS-inspired portfolio built with Flutter — your desktop, your experience.
 
-**🌐 Languages:** [English](README.md) | [Español](README.es.md)
-
 <div align="center">
   <p>
-    <strong>A macOS-inspired portfolio UI</strong> — a visual replica with draggable windows, a magnifying dock, and dark/light themes.
+    <strong>Interactive macOS UI emulation</strong> with draggable windows, magnifying dock, and dark/light themes.
   </p>
 </div>
 
@@ -18,6 +16,7 @@
 - **Dark / Light Themes** — Toggle between themes with animated wallpaper crossfade
 - **Live Menu Bar** — Apple logo, active window title, and real-time clock
 - **Responsive Layout** — Desktop, tablet, and mobile breakpoints
+- **Custom GLSL Shader** — Liquid glass lens effect (WIP)
 
 ## 🖥️ Screenshots
 
@@ -79,6 +78,7 @@ lib/
 | [Flutter](https://flutter.dev/) | Cross-platform UI framework |
 | [flutter_bloc](https://pub.dev/packages/flutter_bloc) | Predictable state management |
 | [cupertino_icons](https://pub.dev/packages/cupertino_icons) | Apple-style icon font |
+| GLSL Shaders | Liquid glass magnification effect |
 
 ## 📐 Design Details
 

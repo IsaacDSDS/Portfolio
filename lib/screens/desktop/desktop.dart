@@ -105,6 +105,7 @@ class DesktopBody extends StatelessWidget {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
+                      //TODO: añadir idioma
                       DesktopApp(
                         icon: 'assets/icons/about_me.png',
                         name: 'About Me',
