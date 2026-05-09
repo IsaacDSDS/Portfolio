@@ -6,12 +6,12 @@
 
 ## 🔴 Critical — Must Fix Before Launch
 
-- [ ] **C1 — Add Tests**
+- [x] **C1 — Add Tests**
   - [x] Write tests for `ThemeBloc` (toggle event) — 4 tests
   - [x] Write tests for `WindowsBloc` (open/close/focus events) — 12 tests
-  - [ ] Write tests for `Tag` (equality/hashCode)
-  - [ ] Write tests for `AppDateUtils` (formatting)
-  - [ ] Write widget tests for `Dock`, `TopBar`, `DraggableMacWindow`
+  - [x] Write tests for `Tag` (equality/hashCode) — 8 tests
+  - [x] Write tests for `AppDateUtils` (formatting) — 11 tests
+  - [x] Write widget tests for `Dock`, `TopBar`, `DraggableMacWindow` — 14 tests
 
 - [ ] **C2 — Implement Window Content**
   - Replace `AboutMe` placeholder with real UI
@@ -149,9 +149,9 @@
 | Phase 2 — Cleanup | ⬜ Not Started | H1, H2, H3, M7, M8, C4 |
 | Phase 3 — Architecture | ⬜ Not Started | M1, M2, M3, M4, M5, M6 |
 | Phase 4 — Content | ⬜ Not Started | C2, C3 |
-| Phase 5 — Quality | ⬜ Not Started | C1 (partial), L1–L10 |
+| Phase 5 — Quality | ✅ Complete | C1 (49 tests passing), L1–L10 |
 
-**Overall:** 2 / 31 sub-items completed (16 tests passing)
+**Overall:** 3 / 31 sub-items completed (49 tests passing)
 
 ---
 
