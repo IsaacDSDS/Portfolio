@@ -14,7 +14,7 @@ class Tag {
   int get hashCode => identifier.hashCode;
 
   @override
-  String toString() => 'Tag(name: $identifier, hashCode: $hashCode)';
+  String toString() => 'Tag(identifier: $identifier, hashCode: $hashCode)';
 
   static Tag get finder => const Tag(identifier: 'Finder');
 }

@@ -7,11 +7,11 @@
 ## 🔴 Critical — Must Fix Before Launch
 
 - [ ] **C1 — Add Tests**
-  - Write tests for `ThemeBloc` (toggle event)
-  - Write tests for `WindowsBloc` (open/close/focus events)
-  - Write tests for `Tag` (equality/hashCode)
-  - Write tests for `AppDateUtils` (formatting)
-  - Write widget tests for `Dock`, `TopBar`, `DraggableMacWindow`
+  - [x] Write tests for `ThemeBloc` (toggle event) — 4 tests
+  - [x] Write tests for `WindowsBloc` (open/close/focus events) — 12 tests
+  - [ ] Write tests for `Tag` (equality/hashCode)
+  - [ ] Write tests for `AppDateUtils` (formatting)
+  - [ ] Write widget tests for `Dock`, `TopBar`, `DraggableMacWindow`
 
 - [ ] **C2 — Implement Window Content**
   - Replace `AboutMe` placeholder with real UI
@@ -61,8 +61,8 @@
   - Add `equatable` package dependency
 
 - [ ] **H6 — Add Equality to BLoC States**
-  - `windows_state.dart`: `WindowsState`
-  - `theme_state.dart`: `ThemeState`
+  - [ ] `windows_state.dart`: `WindowsState`
+  - [x] `theme_state.dart`: `ThemeState`
 
 ---
 
@@ -145,13 +145,13 @@
 
 | Phase | Status | Items |
 |-------|--------|-------|
-| Phase 1 — Foundations | ⬜ Not Started | H5, H6, H7, M9, M11, M10, H4 |
+| Phase 1 — Foundations | 🟡 In Progress | H5, H6 (partial), M9, M11, M10, H4 |
 | Phase 2 — Cleanup | ⬜ Not Started | H1, H2, H3, M7, M8, C4 |
 | Phase 3 — Architecture | ⬜ Not Started | M1, M2, M3, M4, M5, M6 |
 | Phase 4 — Content | ⬜ Not Started | C2, C3 |
-| Phase 5 — Quality | ⬜ Not Started | C1, L1–L10 |
+| Phase 5 — Quality | ⬜ Not Started | C1 (partial), L1–L10 |
 
-**Overall:** 0 / 31 items completed
+**Overall:** 2 / 31 sub-items completed (16 tests passing)
 
 ---
 
