@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:so_portfolio/bloc/notifications/notifications_bloc.dart';
 import 'package:so_portfolio/bloc/theme/theme_bloc.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
+import 'package:so_portfolio/models/ui/notifications.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
+import 'package:so_portfolio/models/ui/window.dart';
 import 'package:so_portfolio/screens/desktop/widgets/app.dart';
-import 'package:so_portfolio/screens/desktop/windows/window_base.dart';
 import 'package:so_portfolio/screens/desktop/widgets/dock.dart';
+import 'package:so_portfolio/screens/desktop/widgets/notifications.dart';
 import 'package:so_portfolio/screens/desktop/widgets/top_bar.dart';
+import 'package:so_portfolio/screens/desktop/windows/about_me.dart';
+import 'package:so_portfolio/screens/desktop/windows/window_base.dart';
+import 'package:so_portfolio/widgets/separated_column.dart';
 
 class DesktopScreen extends StatelessWidget {
   const DesktopScreen({super.key});
@@ -52,6 +58,8 @@ class DesktopScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
+              NotificationContainer(),
             ],
           );
         },
@@ -75,9 +83,15 @@ class DesktopBody extends StatelessWidget {
     required BuildContext context,
     required String identifier,
     required String title,
+    required Widget child,
   }) {
     context.read<WindowsBloc>().add(
-      WindowOpened(Tag(identifier: identifier, title: title)),
+      WindowOpened(
+        WindowConfig(
+          tag: WindowTag(identifier: identifier, title: title),
+          child: child,
+        ),
+      ),
     );
   }
 
@@ -105,77 +119,139 @@ class DesktopBody extends StatelessWidget {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      //TODO: añadir idioma
                       DesktopApp(
-                        icon: 'assets/icons/about_me.png',
+                        icon: AppImages.aboutMe,
                         name: 'About Me',
                         onTap: () => openWindow(
                           context: context,
                           identifier: WindowsTagsIdentifiers.aboutMe,
                           title: 'About Me',
+                          child: AboutMe(),
                         ),
                       ),
                       DesktopApp(
-                        icon: 'assets/icons/skills.png',
+                        icon: AppImages.skills,
                         name: 'Skills',
                         onTap: () => openWindow(
                           context: context,
                           identifier: WindowsTagsIdentifiers.skills,
                           title: 'Skills',
+                          child: Text('Skills'),
                         ),
                       ),
-
                       DesktopApp(
-                        icon: 'assets/icons/projects.png',
+                        icon: AppImages.projects,
                         name: 'Projects',
                         onTap: () => openWindow(
                           context: context,
                           identifier: WindowsTagsIdentifiers.projects,
                           title: 'Projects',
+                          child: Text('Projects'),
                         ),
                       ),
                       DesktopApp(
-                        icon: 'assets/icons/cv.png',
+                        icon: AppImages.cv,
                         name: 'Curriculum Vitae',
                         onTap: () => openWindow(
                           context: context,
                           identifier: WindowsTagsIdentifiers.cv,
                           title: 'Curriculum Vitae',
+                          child: Text('CV'),
                         ),
                       ),
-
                       DesktopApp(
-                        icon: 'assets/icons/contact.png',
+                        icon: AppImages.contact,
                         name: 'Contact Me',
                         onTap: () => openWindow(
                           context: context,
                           identifier: WindowsTagsIdentifiers.contact,
                           title: 'Contact Me',
+                          child: Text('Contact'),
                         ),
                       ),
                       DesktopApp(
-                        icon: 'assets/icons/github.png',
+                        icon: AppImages.github,
                         name: 'Github',
                         onTap: () => openWindow(
                           context: context,
                           identifier: WindowsTagsIdentifiers.github,
                           title: 'Github',
+                          child: Text('Github'),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              for (final tag in state.tags)
+              for (final window in state.windows)
                 WindowBase(
-                  key: ValueKey(tag.identifier),
-                  tag: tag,
-                  onClose: () => windowsBloc.add(WindowClosed(tag)),
-                  onTap: () => windowsBloc.add(WindowFocused(tag)),
+                  key: ValueKey(window.tag.identifier),
+                  window: window,
+                  onClose: () => windowsBloc.add(WindowClosed(window.tag)),
+                  onTap: () => windowsBloc.add(WindowFocused(window.tag)),
                 ),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class NotificationContainer extends StatefulWidget {
+  const NotificationContainer({super.key});
+
+  @override
+  State<NotificationContainer> createState() => _NotificationContainerState();
+}
+
+class _NotificationContainerState extends State<NotificationContainer> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showInitNotification();
+    });
+  }
+
+  void _showInitNotification() {
+    if (!mounted) return;
+    context.read<NotificationsBloc>().add(
+      NotificationsAdd(
+        notification: CustomNotification(
+          tag: NotificationTag(identifier: NotificationIdentifiers.init),
+          title: "You're looking at a Flutter app",
+          message:
+              "This entire macOS desktop — dock, windows, drag & resize — is built with Flutter. Open a window to start.",
+          dateTime: DateTime.now(),
+          icon: AppImages.aboutMe,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final notifications = context
+        .select<NotificationsBloc, List<CustomNotification>>(
+          (value) => value.state.notifications,
+        );
+
+    return Positioned(
+      top: 10,
+      right: 10,
+      child: SeparatedColumn(
+        separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(height: 10);
+        },
+        children: notifications
+            .map(
+              (e) => DesktopNotification(
+                key: ValueKey(e.tag.identifier),
+                notification: e,
+              ),
+            )
+            .toList(),
       ),
     );
   }

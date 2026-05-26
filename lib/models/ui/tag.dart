@@ -1,12 +1,17 @@
-class Tag {
+abstract class Tag {
   final String identifier;
+
+  const Tag({required this.identifier});
+}
+
+class WindowTag extends Tag {
   final String title;
-  const Tag({required this.identifier, this.title = ''});
+  const WindowTag({required super.identifier, this.title = ''});
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Tag &&
+      other is WindowTag &&
           runtimeType == other.runtimeType &&
           identifier == other.identifier;
 
@@ -16,5 +21,9 @@ class Tag {
   @override
   String toString() => 'Tag(identifier: $identifier, hashCode: $hashCode)';
 
-  static Tag get finder => const Tag(identifier: 'Finder');
+  static WindowTag get finder => const WindowTag(identifier: 'Finder');
+}
+
+class NotificationTag extends Tag {
+  NotificationTag({required super.identifier});
 }

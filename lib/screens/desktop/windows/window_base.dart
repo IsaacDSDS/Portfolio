@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:so_portfolio/core/constants.dart';
-import 'package:so_portfolio/models/ui/tag.dart';
+import 'package:so_portfolio/models/ui/window.dart';
 import 'package:so_portfolio/screens/desktop/widgets/mac_window.dart';
-import 'package:so_portfolio/screens/desktop/windows/about_me.dart';
 
 class WindowBase extends StatelessWidget {
-  final Tag tag;
+  final WindowConfig window;
   final Function() onClose;
   final Function() onTap;
 
   const WindowBase({
     super.key,
-    required this.tag,
+    required this.window,
     required this.onClose,
     required this.onTap,
   });
@@ -19,26 +17,18 @@ class WindowBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableMacWindow(
-      tag: tag,
-      title: tag.title,
+      tag: window.tag,
+      title: window.tag.title,
       builder: _buildContent,
       onClose: onClose,
       onTap: onTap,
+      width: window.width,
+      height: window.height,
+      initialPosition: window.initialPosition,
     );
   }
 
   Widget _buildContent(Size size) {
-    switch (tag.identifier) {
-      case WindowsTagsIdentifiers.aboutMe:
-        return AboutMe();
-      case WindowsTagsIdentifiers.skills:
-        return Text('Skills');
-      case WindowsTagsIdentifiers.projects:
-        return Text('Projects');
-      case WindowsTagsIdentifiers.contact:
-        return Text('Contact');
-      default:
-        return Container();
-    }
+    return window.child;
   }
 }

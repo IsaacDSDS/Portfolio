@@ -7,16 +7,14 @@ Widget _makeTestable(Widget child) {
   return MaterialApp(
     home: MediaQuery(
       data: const MediaQueryData(size: Size(1200, 800)),
-      child: Scaffold(
-        body: Stack(children: [child]),
-      ),
+      child: Scaffold(body: Stack(children: [child])),
     ),
   );
 }
 
 void main() {
   group('DraggableMacWindow', () {
-    final testTag = const Tag(identifier: 'test', title: 'Test');
+    final testTag = const WindowTag(identifier: 'test', title: 'Test');
 
     testWidgets('renders window with title', (tester) async {
       await tester.pumpWidget(
@@ -64,14 +62,11 @@ void main() {
 
       // Find the center of the red traffic light button
       // It's the first Container with BoxShape.circle in the header Row
-      final redButton = find.byType(Container).evaluate().firstWhere(
-        (e) {
-          final widget = e.widget as Container;
-          final decoration = widget.decoration as BoxDecoration?;
-          return decoration?.shape == BoxShape.circle;
-        },
-        orElse: () => throw Exception('Red button not found'),
-      );
+      final redButton = find.byType(Container).evaluate().firstWhere((e) {
+        final widget = e.widget as Container;
+        final decoration = widget.decoration as BoxDecoration?;
+        return decoration?.shape == BoxShape.circle;
+      }, orElse: () => throw Exception('Red button not found'));
       await tester.tap(find.byWidget(redButton.widget));
       await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
@@ -91,10 +86,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final circles = tester.widgetList<Container>(
-        find.descendant(
-          of: find.byType(Row),
-          matching: find.byType(Container),
-        ),
+        find.descendant(of: find.byType(Row), matching: find.byType(Container)),
       );
       final trafficLights = circles.where(
         (c) =>

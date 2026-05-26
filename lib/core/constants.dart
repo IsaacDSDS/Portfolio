@@ -9,3 +9,16 @@ class WindowsTagsIdentifiers {
   static const String github = "github";
   static const String cv = "cv";
 }
+
+class NotificationIdentifiers {
+  static const String init = "init";
+}
+
+class AppImages {
+  static const String aboutMe = 'assets/icons/about_me.webp';
+  static const String skills = 'assets/icons/skills.png';
+  static const String projects = 'assets/icons/projects.png';
+  static const String contact = 'assets/icons/contact.png';
+  static const String github = 'assets/icons/github.png';
+  static const String cv = 'assets/icons/cv.png';
+}

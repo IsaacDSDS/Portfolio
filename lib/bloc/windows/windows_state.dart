@@ -1,11 +1,14 @@
 part of 'windows_bloc.dart';
 
 class WindowsState {
-  final List<Tag> tags;
-  final Tag? currentTag;
-  const WindowsState({this.currentTag, this.tags = const []});
-  WindowsState copyWith({Tag? currentTag, List<Tag>? tags}) => WindowsState(
+  final List<WindowConfig> windows;
+  final WindowTag? currentTag;
+  const WindowsState({this.currentTag, this.windows = const []});
+  WindowsState copyWith({
+    WindowTag? currentTag,
+    List<WindowConfig>? windows,
+  }) => WindowsState(
     currentTag: currentTag ?? this.currentTag,
-    tags: tags ?? this.tags,
+    windows: windows ?? this.windows,
   );
 }

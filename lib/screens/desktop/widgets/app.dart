@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:so_portfolio/core/extensions.dart';
 
 class DesktopApp extends StatelessWidget {
   final String icon;
@@ -37,14 +38,8 @@ class DesktopApp extends StatelessWidget {
                   Text(
                     name,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 2
-                        ..color = Colors.black,
-                    ),
-                  ),
+                    style: TextStyle(fontSize: 14),
+                  ).withOutline,
                   Text(
                     name,
                     textAlign: TextAlign.center,

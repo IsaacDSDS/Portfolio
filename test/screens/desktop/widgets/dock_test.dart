@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
+import 'package:so_portfolio/models/ui/window.dart';
 import 'package:so_portfolio/screens/desktop/widgets/dock.dart';
 
 Widget _makeTestable(Widget child, {WindowsBloc? bloc}) {
@@ -28,14 +29,22 @@ void main() {
       final bloc = WindowsBloc()
         ..add(
           WindowOpened(
-            const Tag(identifier: WindowsTagsIdentifiers.aboutMe, title: 'About Me'),
+            WindowConfig(
+              tag: const WindowTag(
+                identifier: WindowsTagsIdentifiers.aboutMe,
+                title: 'About Me',
+              ),
+              child: const SizedBox(),
+            ),
           ),
         );
 
       await tester.pumpWidget(_makeTestable(const Dock(), bloc: bloc));
       await tester.pumpAndSettle();
 
-      final items = tester.widgetList<AnimatedDockItem>(find.byType(AnimatedDockItem));
+      final items = tester.widgetList<AnimatedDockItem>(
+        find.byType(AnimatedDockItem),
+      );
       final openItems = items.where((item) => item.isOpen).length;
       expect(openItems, 1);
     });
@@ -45,13 +54,13 @@ void main() {
       await tester.pumpWidget(_makeTestable(const Dock(), bloc: bloc));
       await tester.pumpAndSettle();
 
-      expect(bloc.state.tags, isEmpty);
+      expect(bloc.state.windows, isEmpty);
 
       await tester.tap(find.byType(AnimatedDockItem).first);
       await tester.pumpAndSettle();
 
-      expect(bloc.state.tags, isNotEmpty);
-      expect(bloc.state.tags.first.identifier, WindowsTagsIdentifiers.aboutMe);
+      expect(bloc.state.windows, isNotEmpty);
+      expect(bloc.state.windows.first.tag.identifier, WindowsTagsIdentifiers.aboutMe);
     });
 
     testWidgets('shows tooltip messages on dock items', (tester) async {

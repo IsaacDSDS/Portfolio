@@ -35,7 +35,7 @@ class DraggableMacWindow extends StatefulWidget {
   final double height;
   final Offset? initialPosition;
   final VoidCallback? onClose, onTap;
-  final Tag tag;
+  final WindowTag tag;
   final Function(Size) builder;
 
   const DraggableMacWindow({
