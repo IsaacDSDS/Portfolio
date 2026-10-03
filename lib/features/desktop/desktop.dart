@@ -7,13 +7,13 @@ import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/notifications.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
 import 'package:so_portfolio/models/ui/window.dart';
-import 'package:so_portfolio/screens/desktop/widgets/app.dart';
-import 'package:so_portfolio/screens/desktop/widgets/dock.dart';
-import 'package:so_portfolio/screens/desktop/widgets/notifications.dart';
-import 'package:so_portfolio/screens/desktop/widgets/top_bar.dart';
-import 'package:so_portfolio/screens/desktop/windows/about_me.dart';
-import 'package:so_portfolio/screens/desktop/windows/window_base.dart';
-import 'package:so_portfolio/widgets/separated_column.dart';
+import 'package:so_portfolio/features/desktop/app.dart';
+import 'package:so_portfolio/features/desktop/dock.dart';
+import 'package:so_portfolio/features/desktop/notifications.dart';
+import 'package:so_portfolio/features/desktop/top_bar.dart';
+import 'package:so_portfolio/features/about_me/about_me.dart';
+import 'package:so_portfolio/features/desktop/window_base.dart';
+import 'package:so_portfolio/shared/widgets/separated_column.dart';
 
 class DesktopScreen extends StatelessWidget {
   const DesktopScreen({super.key});

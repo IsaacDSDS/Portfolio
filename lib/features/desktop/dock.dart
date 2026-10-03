@@ -4,8 +4,8 @@ import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
 import 'package:so_portfolio/models/ui/window.dart';
-import 'package:so_portfolio/screens/desktop/windows/about_me.dart';
-import 'package:so_portfolio/widgets/separated_row.dart';
+import 'package:so_portfolio/features/about_me/about_me.dart';
+import 'package:so_portfolio/shared/widgets/separated_row.dart';
 
 const double _kBaseSize = bottomBarHeight - 25;
 const double _kMaxSize = 70;

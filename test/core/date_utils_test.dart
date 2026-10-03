@@ -64,4 +64,30 @@ void main() {
       });
     });
   });
+
+  group('DateTimeUtils', () {
+    test('formatDate uses MM/dd/yy', () {
+      expect(DateTimeUtils.formatDate(DateTime(2026, 5, 8)), '05/08/26');
+    });
+
+    test('isSameLocalDay is true for the same day', () {
+      expect(
+        DateTimeUtils.isSameLocalDay(
+          DateTime(2026, 5, 8, 1),
+          DateTime(2026, 5, 8, 22),
+        ),
+        isTrue,
+      );
+    });
+
+    test('differenceInMinutes returns whole minutes', () {
+      expect(
+        DateTimeUtils.differenceInMinutes(
+          DateTime(2026, 5, 8, 10, 30),
+          DateTime(2026, 5, 8, 10, 0),
+        ),
+        30,
+      );
+    });
+  });
 }

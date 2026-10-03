@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/notifications/notifications_bloc.dart'
     show NotificationsBloc;
-import 'package:so_portfolio/screens/screens.dart';
+import 'package:so_portfolio/features/screens.dart';
 import 'package:so_portfolio/theme/theme_app.dart';
 import 'package:so_portfolio/bloc/theme/theme_bloc.dart';
 

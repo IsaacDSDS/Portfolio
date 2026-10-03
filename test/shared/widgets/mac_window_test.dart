@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
-import 'package:so_portfolio/screens/desktop/widgets/mac_window.dart';
+import 'package:so_portfolio/shared/widgets/mac_window.dart';
 
 Widget _makeTestable(Widget child) {
   return MaterialApp(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:so_portfolio/models/ui/window.dart';
-import 'package:so_portfolio/screens/desktop/widgets/mac_window.dart';
+import 'package:so_portfolio/shared/widgets/mac_window.dart';
 
 class WindowBase extends StatelessWidget {
   final WindowConfig window;

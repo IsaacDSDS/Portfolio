@@ -5,7 +5,7 @@ import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/date_utils.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
 import 'package:so_portfolio/models/ui/window.dart';
-import 'package:so_portfolio/screens/desktop/widgets/top_bar.dart';
+import 'package:so_portfolio/features/desktop/top_bar.dart';
 
 Widget _makeTestable(Widget child, {WindowsBloc? bloc}) {
   return MaterialApp(

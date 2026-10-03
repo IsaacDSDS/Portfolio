@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
-import 'package:so_portfolio/screens/desktop/desktop.dart';
-import 'package:so_portfolio/screens/mobile/mobile.dart';
-import 'package:so_portfolio/screens/tablet/tablet.dart';
+import 'package:so_portfolio/features/desktop/desktop.dart';
+import 'package:so_portfolio/features/mobile/mobile.dart';
+import 'package:so_portfolio/features/tablet/tablet.dart';
 
 class BaseScreen extends StatelessWidget {
   const BaseScreen({super.key});

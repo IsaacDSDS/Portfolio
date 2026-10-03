@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/notifications/notifications_bloc.dart';
 import 'package:so_portfolio/models/ui/notifications.dart';
 import 'package:so_portfolio/theme/theme_getter.dart';
-import 'package:so_portfolio/utils/date_utils.dart';
-import 'package:so_portfolio/widgets/separated_column.dart';
-import 'package:so_portfolio/widgets/separated_row.dart';
+import 'package:so_portfolio/core/date_utils.dart';
+import 'package:so_portfolio/shared/widgets/separated_column.dart';
+import 'package:so_portfolio/shared/widgets/separated_row.dart';
 
 const double notificationWidth = 350;
 
