@@ -4,8 +4,8 @@ import 'package:so_portfolio/models/ui/tag.dart';
 void main() {
   group('Tag', () {
     test('equals when identifier is the same', () {
-      const tag1 = WindowTag(identifier: 'about_me', title: 'About Me');
-      const tag2 = WindowTag(identifier: 'about_me', title: 'Different Title');
+      const tag1 = WindowTag(identifier: 'about_me');
+      const tag2 = WindowTag(identifier: 'about_me');
       expect(tag1, equals(tag2));
     });
 
@@ -33,19 +33,17 @@ void main() {
     });
 
     test('toString returns expected format', () {
-      const tag = WindowTag(identifier: 'github', title: 'Github');
-      expect(tag.toString(), contains('github'));
+      const tag = WindowTag(identifier: 'github');
+      expect(tag.toString(), 'WindowTag(identifier: github)');
     });
 
     test('finder returns Tag with Finder identifier', () {
       final finder = WindowTag.finder;
       expect(finder.identifier, equals('Finder'));
-      expect(finder.title, isEmpty);
     });
 
-    test('title defaults to empty string', () {
-      const tag = WindowTag(identifier: 'test');
-      expect(tag.title, isEmpty);
+    test('finder equals another finder', () {
+      expect(WindowTag.finder, equals(WindowTag.finder));
     });
   });
 }

@@ -1,25 +1,21 @@
+import 'package:equatable/equatable.dart';
+
 abstract class Tag {
   final String identifier;
 
   const Tag({required this.identifier});
 }
 
-class WindowTag extends Tag {
-  final String title;
-  const WindowTag({required super.identifier, this.title = ''});
+/// Identity of a window. Presentation data (title, icon, ...) lives in the
+/// window catalog, not here.
+class WindowTag extends Tag with Equatable {
+  const WindowTag({required super.identifier});
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WindowTag &&
-          runtimeType == other.runtimeType &&
-          identifier == other.identifier;
+  List<Object?> get props => [identifier];
 
   @override
-  int get hashCode => identifier.hashCode;
-
-  @override
-  String toString() => 'Tag(identifier: $identifier, hashCode: $hashCode)';
+  String toString() => 'WindowTag(identifier: $identifier)';
 
   static WindowTag get finder => const WindowTag(identifier: 'Finder');
 }

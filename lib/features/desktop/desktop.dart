@@ -6,13 +6,13 @@ import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/notifications.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
-import 'package:so_portfolio/models/ui/window.dart';
 import 'package:so_portfolio/features/desktop/app.dart';
 import 'package:so_portfolio/features/desktop/dock.dart';
 import 'package:so_portfolio/features/desktop/notifications.dart';
 import 'package:so_portfolio/features/desktop/top_bar.dart';
-import 'package:so_portfolio/features/about_me/about_me.dart';
 import 'package:so_portfolio/features/desktop/window_base.dart';
+import 'package:so_portfolio/features/desktop/window_catalog.dart';
+import 'package:so_portfolio/features/desktop/window_extensions.dart';
 import 'package:so_portfolio/shared/widgets/separated_column.dart';
 
 class DesktopScreen extends StatelessWidget {
@@ -79,22 +79,6 @@ class DesktopScreen extends StatelessWidget {
 class DesktopBody extends StatelessWidget {
   const DesktopBody({super.key});
 
-  void openWindow({
-    required BuildContext context,
-    required String identifier,
-    required String title,
-    required Widget child,
-  }) {
-    context.read<WindowsBloc>().add(
-      WindowOpened(
-        WindowConfig(
-          tag: WindowTag(identifier: identifier, title: title),
-          child: child,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final WindowsBloc windowsBloc = context.watch<WindowsBloc>();
@@ -119,76 +103,23 @@ class DesktopBody extends StatelessWidget {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      DesktopApp(
-                        icon: AppImages.aboutMe,
-                        name: 'About Me',
-                        onTap: () => openWindow(
-                          context: context,
-                          identifier: WindowsTagsIdentifiers.aboutMe,
-                          title: 'About Me',
-                          child: AboutMe(),
+                      for (final identifier in desktopOrder)
+                        DesktopApp(
+                          icon: windowCatalog[identifier]!.icon,
+                          name: windowCatalog[identifier]!.title,
+                          onTap: () =>
+                              context.openWindow(windowCatalog[identifier]!.tag),
                         ),
-                      ),
-                      DesktopApp(
-                        icon: AppImages.skills,
-                        name: 'Skills',
-                        onTap: () => openWindow(
-                          context: context,
-                          identifier: WindowsTagsIdentifiers.skills,
-                          title: 'Skills',
-                          child: Text('Skills'),
-                        ),
-                      ),
-                      DesktopApp(
-                        icon: AppImages.projects,
-                        name: 'Projects',
-                        onTap: () => openWindow(
-                          context: context,
-                          identifier: WindowsTagsIdentifiers.projects,
-                          title: 'Projects',
-                          child: Text('Projects'),
-                        ),
-                      ),
-                      DesktopApp(
-                        icon: AppImages.cv,
-                        name: 'Curriculum Vitae',
-                        onTap: () => openWindow(
-                          context: context,
-                          identifier: WindowsTagsIdentifiers.cv,
-                          title: 'Curriculum Vitae',
-                          child: Text('CV'),
-                        ),
-                      ),
-                      DesktopApp(
-                        icon: AppImages.contact,
-                        name: 'Contact Me',
-                        onTap: () => openWindow(
-                          context: context,
-                          identifier: WindowsTagsIdentifiers.contact,
-                          title: 'Contact Me',
-                          child: Text('Contact'),
-                        ),
-                      ),
-                      DesktopApp(
-                        icon: AppImages.github,
-                        name: 'Github',
-                        onTap: () => openWindow(
-                          context: context,
-                          identifier: WindowsTagsIdentifiers.github,
-                          title: 'Github',
-                          child: Text('Github'),
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ),
-              for (final window in state.windows)
+              for (final tag in state.windows)
                 WindowBase(
-                  key: ValueKey(window.tag.identifier),
-                  window: window,
-                  onClose: () => windowsBloc.add(WindowClosed(window.tag)),
-                  onTap: () => windowsBloc.add(WindowFocused(window.tag)),
+                  key: ValueKey(tag.identifier),
+                  tag: tag,
+                  onClose: () => windowsBloc.add(WindowClosed(tag)),
+                  onTap: () => windowsBloc.add(WindowFocused(tag)),
                 ),
             ],
           );
@@ -222,7 +153,7 @@ class _NotificationContainerState extends State<NotificationContainer> {
           tag: NotificationTag(identifier: NotificationIdentifiers.init),
           title: "You're looking at a Flutter app",
           message:
-              "This entire macOS desktop — dock, windows, drag & resize — is built with Flutter. Open a window to start.",
+              "This entire macOS desktop â€” dock, windows, drag & resize â€” is built with Flutter. Open a window to start.",
           dateTime: DateTime.now(),
           icon: AppImages.aboutMe,
         ),

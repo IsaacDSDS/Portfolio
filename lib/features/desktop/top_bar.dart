@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/core/date_utils.dart';
+import 'package:so_portfolio/features/desktop/window_catalog.dart';
 import 'package:so_portfolio/theme/theme_getter.dart';
 
 class TopBar extends StatefulWidget {
@@ -66,10 +67,7 @@ class _TopBarState extends State<TopBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        state.currentTag?.title != null &&
-                                state.currentTag!.title.isNotEmpty
-                            ? state.currentTag!.title
-                            : "Finder",
+                        windowTitle(state.currentTag),
                         style: TextStyle(
                           color: context.theme.appColors.topBarTextColor,
                           fontWeight: FontWeight.w600,

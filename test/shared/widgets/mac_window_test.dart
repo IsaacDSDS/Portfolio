@@ -14,7 +14,7 @@ Widget _makeTestable(Widget child) {
 
 void main() {
   group('DraggableMacWindow', () {
-    final testTag = const WindowTag(identifier: 'test', title: 'Test');
+    final testTag = const WindowTag(identifier: 'test');
 
     testWidgets('renders window with title', (tester) async {
       await tester.pumpWidget(

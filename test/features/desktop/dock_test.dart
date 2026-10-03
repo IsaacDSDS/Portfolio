@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
-import 'package:so_portfolio/models/ui/window.dart';
 import 'package:so_portfolio/features/desktop/dock.dart';
 
 Widget _makeTestable(Widget child, {WindowsBloc? bloc}) {
@@ -28,14 +27,8 @@ void main() {
     testWidgets('shows open indicator only for open windows', (tester) async {
       final bloc = WindowsBloc()
         ..add(
-          WindowOpened(
-            WindowConfig(
-              tag: const WindowTag(
-                identifier: WindowsTagsIdentifiers.aboutMe,
-                title: 'About Me',
-              ),
-              child: const SizedBox(),
-            ),
+          const WindowOpened(
+            WindowTag(identifier: WindowsTagsIdentifiers.aboutMe),
           ),
         );
 
@@ -60,7 +53,36 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(bloc.state.windows, isNotEmpty);
-      expect(bloc.state.windows.first.tag.identifier, WindowsTagsIdentifiers.aboutMe);
+      expect(
+        bloc.state.windows.first.identifier,
+        WindowsTagsIdentifiers.aboutMe,
+      );
+    });
+
+    testWidgets('lists items in dock order with their colors', (tester) async {
+      await tester.pumpWidget(_makeTestable(const Dock()));
+      await tester.pumpAndSettle();
+
+      final data = tester
+          .widgetList<AnimatedDockItem>(find.byType(AnimatedDockItem))
+          .map((item) => item.data)
+          .toList();
+      expect(data.map((d) => d.name).toList(), [
+        'About Me',
+        'Skills',
+        'Projects',
+        'Contact Me',
+        'Github',
+        'Curriculum Vitae',
+      ]);
+      expect(data.map((d) => d.color).toList(), [
+        const Color(0xff227dd5),
+        const Color(0xff12338b),
+        const Color(0xff2798e7),
+        const Color(0xff0e59d8),
+        const Color(0xff313133),
+        const Color(0xffff4731),
+      ]);
     });
 
     testWidgets('shows tooltip messages on dock items', (tester) async {
