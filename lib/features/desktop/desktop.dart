@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/notifications/notifications_bloc.dart';
 import 'package:so_portfolio/bloc/theme/theme_bloc.dart';
-import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
 import 'package:so_portfolio/models/ui/notifications.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
@@ -10,9 +9,9 @@ import 'package:so_portfolio/features/desktop/app.dart';
 import 'package:so_portfolio/features/desktop/dock.dart';
 import 'package:so_portfolio/features/desktop/notifications.dart';
 import 'package:so_portfolio/features/desktop/top_bar.dart';
-import 'package:so_portfolio/features/desktop/window_base.dart';
 import 'package:so_portfolio/features/desktop/window_catalog.dart';
 import 'package:so_portfolio/features/desktop/window_extensions.dart';
+import 'package:so_portfolio/features/desktop/window_layer.dart';
 import 'package:so_portfolio/shared/widgets/separated_column.dart';
 
 class DesktopScreen extends StatelessWidget {
@@ -24,45 +23,41 @@ class DesktopScreen extends StatelessWidget {
     final isDark = themeBloc.state.isDark;
 
     return Scaffold(
-      body: BlocBuilder<WindowsBloc, WindowsState>(
-        builder: (context, state) {
-          return Stack(
-            children: [
-              Positioned.fill(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.asset(
-                      'assets/backgrounds/light_desktop.jpg',
-                      fit: BoxFit.cover,
-                    ),
-                    AnimatedOpacity(
-                      opacity: isDark ? 1.0 : 0.0,
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeInOut,
-                      child: Image.asset(
-                        'assets/backgrounds/dark_desktop.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  'assets/backgrounds/light_desktop.jpg',
+                  fit: BoxFit.cover,
                 ),
-              ),
-              Positioned.fill(
-                child: Column(
-                  children: [
-                    TopBar(),
-                    DesktopBody(),
-                    Dock(),
-                    SizedBox(height: 10),
-                  ],
+                AnimatedOpacity(
+                  opacity: isDark ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeInOut,
+                  child: Image.asset(
+                    'assets/backgrounds/dark_desktop.jpg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
+              ],
+            ),
+          ),
+          const Positioned.fill(
+            child: Column(
+              children: [
+                TopBar(),
+                DesktopBody(),
+                Dock(),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
 
-              NotificationContainer(),
-            ],
-          );
-        },
+          const NotificationContainer(),
+        ],
       ),
       floatingActionButton: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themeState) {
@@ -81,9 +76,6 @@ class DesktopBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WindowsBloc windowsBloc = context.watch<WindowsBloc>();
-    final state = windowsBloc.state;
-
     return Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -114,13 +106,7 @@ class DesktopBody extends StatelessWidget {
                   ),
                 ),
               ),
-              for (final tag in state.windows)
-                WindowBase(
-                  key: ValueKey(tag.identifier),
-                  tag: tag,
-                  onClose: () => windowsBloc.add(WindowClosed(tag)),
-                  onTap: () => windowsBloc.add(WindowFocused(tag)),
-                ),
+              const WindowLayer(),
             ],
           );
         },
