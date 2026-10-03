@@ -1,48 +1,36 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+// `bloc` is a transitive dependency of `flutter_bloc`. It is imported directly
+// (instead of `flutter_bloc`) so the windows BLoC does not depend on Flutter.
+// ignore: depend_on_referenced_packages
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
-import 'package:so_portfolio/models/ui/window.dart';
 
 part 'windows_event.dart';
 part 'windows_state.dart';
 
 class WindowsBloc extends Bloc<WindowsEvent, WindowsState> {
-  WindowsBloc() : super(const WindowsState(windows: [])) {
-    on<WindowOpened>(openWindow);
-    on<WindowClosed>(closeWindow);
-    on<WindowFocused>(focusWindow);
+  WindowsBloc() : super(const WindowsState()) {
+    on<WindowOpened>(_onWindowOpened);
+    on<WindowClosed>(_onWindowClosed);
+    on<WindowFocused>(_onWindowFocused);
   }
 
-  Future<void> openWindow(
-    WindowOpened event,
-    Emitter<WindowsState> emit,
-  ) async {
-    if (state.windows.any((w) => w.tag == event.window.tag)) return;
-    emit(
-      state.copyWith(
-        currentTag: event.window.tag,
-        windows: [...state.windows, event.window],
-      ),
-    );
+  void _onWindowOpened(WindowOpened event, Emitter<WindowsState> emit) {
+    if (state.windows.contains(event.tag)) return;
+    emit(state.copyWith(windows: [...state.windows, event.tag]));
   }
 
-  Future<void> closeWindow(
-    WindowClosed event,
-    Emitter<WindowsState> emit,
-  ) async {
-    final windows = state.windows.where((w) => w.tag != event.tag).toList();
-    final currentTag = windows.isEmpty ? WindowTag.finder : windows.last.tag;
-    emit(state.copyWith(windows: windows, currentTag: currentTag));
+  void _onWindowClosed(WindowClosed event, Emitter<WindowsState> emit) {
+    final windows = state.windows.where((tag) => tag != event.tag).toList();
+    emit(state.copyWith(windows: windows));
   }
 
-  Future<void> focusWindow(
-    WindowFocused event,
-    Emitter<WindowsState> emit,
-  ) async {
-    final i = state.windows.indexWhere((w) => w.tag == event.tag);
+  void _onWindowFocused(WindowFocused event, Emitter<WindowsState> emit) {
+    final i = state.windows.indexOf(event.tag);
     if (i < 0 || i == state.windows.length - 1) return;
     final windows = [...state.windows]
       ..removeAt(i)
-      ..add(state.windows[i]);
-    emit(state.copyWith(windows: windows, currentTag: event.tag));
+      ..add(event.tag);
+    emit(state.copyWith(windows: windows));
   }
 }

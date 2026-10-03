@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/constants.dart';
+import 'package:so_portfolio/features/desktop/window_catalog.dart';
+import 'package:so_portfolio/features/desktop/window_extensions.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
 import 'package:so_portfolio/models/ui/window.dart';
-import 'package:so_portfolio/screens/desktop/windows/about_me.dart';
-import 'package:so_portfolio/widgets/separated_row.dart';
+import 'package:so_portfolio/shared/widgets/separated_row.dart';
 
 const double _kBaseSize = bottomBarHeight - 25;
 const double _kMaxSize = 70;
@@ -20,22 +21,6 @@ class Dock extends StatefulWidget {
 
 class _DockState extends State<Dock> {
   double? _mouseX;
-
-  void openWindow({
-    required BuildContext context,
-    required String identifier,
-    required String title,
-    required Widget child,
-  }) {
-    context.read<WindowsBloc>().add(
-      WindowOpened(
-        WindowConfig(
-          tag: WindowTag(identifier: identifier, title: title),
-          child: child,
-        ),
-      ),
-    );
-  }
 
   double sizeForIndex(int index, int total) {
     if (_mouseX == null) return _kBaseSize;
@@ -94,96 +79,28 @@ class _DockState extends State<Dock> {
   }
 
   List<DockItemData> _buildItems(BuildContext context) {
-    final openWindows = context.select<WindowsBloc, List<WindowConfig>>(
+    final openWindows = context.select<WindowsBloc, List<WindowTag>>(
       (bloc) => bloc.state.windows,
     );
 
     return [
-      DockItemData(
-        icon: AppImages.aboutMe,
-        name: 'About Me',
-        color: const Color(0xff227dd5),
-        isOpen: openWindows.any(
-          (w) => w.tag.identifier == WindowsTagsIdentifiers.aboutMe,
-        ),
-        onTap: () => openWindow(
-          context: context,
-          identifier: WindowsTagsIdentifiers.aboutMe,
-          title: 'About Me',
-          child: AboutMe(),
-        ),
-      ),
-      DockItemData(
-        icon: AppImages.skills,
-        name: 'Skills',
-        color: const Color(0xff12338b),
-        isOpen: openWindows.any(
-          (w) => w.tag.identifier == WindowsTagsIdentifiers.skills,
-        ),
-        onTap: () => openWindow(
-          context: context,
-          identifier: WindowsTagsIdentifiers.skills,
-          title: 'Skills',
-          child: Text('Skills'),
-        ),
-      ),
-      DockItemData(
-        icon: AppImages.projects,
-        name: 'Projects',
-        color: const Color(0xff2798e7),
-        isOpen: openWindows.any(
-          (w) => w.tag.identifier == WindowsTagsIdentifiers.projects,
-        ),
-        onTap: () => openWindow(
-          context: context,
-          identifier: WindowsTagsIdentifiers.projects,
-          title: 'Projects',
-          child: Text('Projects'),
-        ),
-      ),
-      DockItemData(
-        icon: AppImages.contact,
-        name: 'Contact Me',
-        color: const Color(0xff0e59d8),
-        isOpen: openWindows.any(
-          (w) => w.tag.identifier == WindowsTagsIdentifiers.contact,
-        ),
-        onTap: () => openWindow(
-          context: context,
-          identifier: WindowsTagsIdentifiers.contact,
-          title: 'Contact Me',
-          child: Text('Contact'),
-        ),
-      ),
-      DockItemData(
-        icon: AppImages.github,
-        name: 'Github',
-        color: Color(0xff313133),
-        isOpen: openWindows.any(
-          (w) => w.tag.identifier == WindowsTagsIdentifiers.github,
-        ),
-        onTap: () => openWindow(
-          context: context,
-          identifier: WindowsTagsIdentifiers.github,
-          title: 'Github',
-          child: Text('Github'),
-        ),
-      ),
-      DockItemData(
-        icon: AppImages.cv,
-        name: 'Curriculum Vitae',
-        color: const Color(0xffff4731),
-        isOpen: openWindows.any(
-          (w) => w.tag.identifier == WindowsTagsIdentifiers.cv,
-        ),
-        onTap: () => openWindow(
-          context: context,
-          identifier: WindowsTagsIdentifiers.cv,
-          title: 'Curriculum Vitae',
-          child: Text('CV'),
-        ),
-      ),
+      for (final identifier in dockOrder)
+        _itemFor(context, windowCatalog[identifier]!, openWindows),
     ];
+  }
+
+  DockItemData _itemFor(
+    BuildContext context,
+    WindowDefinition definition,
+    List<WindowTag> openWindows,
+  ) {
+    return DockItemData(
+      icon: definition.icon,
+      name: definition.title,
+      color: definition.dockColor,
+      isOpen: openWindows.contains(definition.tag),
+      onTap: () => context.openWindow(definition.tag),
+    );
   }
 }
 

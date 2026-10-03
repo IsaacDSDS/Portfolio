@@ -4,8 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:so_portfolio/bloc/windows/windows_bloc.dart';
 import 'package:so_portfolio/core/date_utils.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
-import 'package:so_portfolio/models/ui/window.dart';
-import 'package:so_portfolio/screens/desktop/widgets/top_bar.dart';
+import 'package:so_portfolio/features/desktop/top_bar.dart';
 
 Widget _makeTestable(Widget child, {WindowsBloc? bloc}) {
   return MaterialApp(
@@ -33,14 +32,7 @@ void main() {
 
     testWidgets('shows window title when a window is open', (tester) async {
       final bloc = WindowsBloc()
-        ..add(
-          WindowOpened(
-            WindowConfig(
-              tag: const WindowTag(identifier: 'about_me', title: 'About Me'),
-              child: const SizedBox(),
-            ),
-          ),
-        );
+        ..add(const WindowOpened(WindowTag(identifier: 'about_me')));
 
       await tester.pumpWidget(_makeTestable(const TopBar(), bloc: bloc));
       await tester.pumpAndSettle();
@@ -58,27 +50,14 @@ void main() {
 
     testWidgets('shows most recently opened window title', (tester) async {
       final bloc = WindowsBloc()
-        ..add(
-          WindowOpened(
-            WindowConfig(
-              tag: const WindowTag(identifier: 'about_me', title: 'About Me'),
-              child: const SizedBox(),
-            ),
-          ),
-        )
-        ..add(
-          WindowOpened(
-            WindowConfig(
-              tag: const WindowTag(identifier: 'skills', title: 'Skills'),
-              child: const SizedBox(),
-            ),
-          ),
-        );
+        ..add(const WindowOpened(WindowTag(identifier: 'about_me')))
+        ..add(const WindowOpened(WindowTag(identifier: 'skills')));
 
       await tester.pumpWidget(_makeTestable(const TopBar(), bloc: bloc));
       await tester.pumpAndSettle();
 
       expect(find.text('Skills'), findsOneWidget);
+      expect(find.text('About Me'), findsNothing);
     });
   });
 }

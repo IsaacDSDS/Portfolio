@@ -1,18 +1,22 @@
 part of 'windows_bloc.dart';
 
-sealed class WindowsEvent {}
+sealed class WindowsEvent extends Equatable {
+  final WindowTag tag;
+
+  const WindowsEvent(this.tag);
+
+  @override
+  List<Object?> get props => [tag];
+}
 
 class WindowOpened extends WindowsEvent {
-  final WindowConfig window;
-  WindowOpened(this.window);
+  const WindowOpened(super.tag);
 }
 
 class WindowClosed extends WindowsEvent {
-  final WindowTag tag;
-  WindowClosed(this.tag);
+  const WindowClosed(super.tag);
 }
 
 class WindowFocused extends WindowsEvent {
-  final WindowTag tag;
-  WindowFocused(this.tag);
+  const WindowFocused(super.tag);
 }

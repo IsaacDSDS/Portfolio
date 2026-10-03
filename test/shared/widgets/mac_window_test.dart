@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:so_portfolio/models/ui/tag.dart';
-import 'package:so_portfolio/screens/desktop/widgets/mac_window.dart';
+import 'package:so_portfolio/shared/widgets/mac_window.dart';
 
 Widget _makeTestable(Widget child) {
   return MaterialApp(
@@ -14,7 +14,7 @@ Widget _makeTestable(Widget child) {
 
 void main() {
   group('DraggableMacWindow', () {
-    final testTag = const WindowTag(identifier: 'test', title: 'Test');
+    final testTag = const WindowTag(identifier: 'test');
 
     testWidgets('renders window with title', (tester) async {
       await tester.pumpWidget(
